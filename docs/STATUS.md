@@ -22,6 +22,8 @@ Public CI is the reproducible record for PHP standards, WordPress 6.5/latest con
 - The 15-file deterministic runtime archive passed hash, UTF-8/BOM/LF, path, metadata and source-match checks. Public tracked-file scanning excluded private QA, operations, credentials and theme files.
 - Logo exports have validated 128/256/1024 square PNG dimensions and preserved transparency.
 
+The first public GitHub Actions run passed all six jobs: PHP 7.4/8.3/8.5 standards, WordPress 6.5/latest contracts, and packaged Plugin Check. The official WordPress.org readme validator found only optional listing notes; an upgrade notice was then added and the uncommon provider tag removed.
+
 ## Remaining compatibility scope
 
 The real minimum Bricks version and a full multisite network-uninstall matrix have not been exercised. PHP/WordPress minimum contracts are covered by public CI, with the real-theme gate limited to the versions above. Low-memory concurrent 10 MB uploads are a hosting-sensitive manual check. No PHPStan/Psalm gate is configured yet; adding a focused WordPress-aware static-analysis baseline is recorded development debt.

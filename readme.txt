@@ -1,6 +1,6 @@
 === Native FormSubmit for Bricks ===
 Contributors: minthaik
-Tags: bricks, forms, formsubmit, contact-form
+Tags: bricks, forms, contact-form, email, file-upload
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -102,3 +102,8 @@ First remove or replace the FormSubmit action on connected forms. Bricks may ski
 
 = 0.1.0 =
 * Initial standalone version with native Bricks controls, setup and test-message workflow.
+
+== Upgrade Notice ==
+
+= 0.2.1 =
+Directory candidate with a new folder/name and preserved native action/settings IDs. Deactivate the earlier private package before installing. Back up its site default recipient; do not activate both packages together.
