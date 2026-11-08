@@ -27,7 +27,7 @@ python scripts/package.py
 
 Upload `build/native-formsubmit-for-bricks-0.2.1.zip` through **Plugins > Add New > Upload Plugin**. Open **Settings > Native FormSubmit for Bricks**, optionally save a recipient, and send the deliberate setup test. Confirm FormSubmit's activation email, then verify a fresh test reaches your inbox. Add **FormSubmit** under Actions on a native Bricks Form element and configure its FormSubmit group.
 
-Directory submission is prepared, not yet submitted or approved. See [submission notes](docs/WORDPRESS-ORG.md), including migration from the earlier private `formsubmit-for-bricks` package.
+Submitted to WordPress.org on November 8, 2026 under `minthaik`: automated scan **passed**, status **Awaiting Review**. It is not yet approved. See [submission notes](docs/WORDPRESS-ORG.md), including migration from the earlier private `formsubmit-for-bricks` package.
 
 ## Development and checks
 

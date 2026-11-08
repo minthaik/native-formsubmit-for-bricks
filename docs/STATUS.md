@@ -2,7 +2,7 @@
 
 ## Current candidate
 
-Version 0.2.1 prepares the independent **Native FormSubmit for Bricks** name, matching text domain/folder, original logo and public CI. Native action/settings IDs are preserved. The upload accessor is guarded so earlier text-only Bricks versions do not require its newer file API. The production private package remains 0.2.0; this candidate has not been submitted to WordPress.org or migrated into production.
+Version 0.2.1 prepares the independent **Native FormSubmit for Bricks** name, matching text domain/folder, original logo and public CI. Native action/settings IDs are preserved. The upload accessor is guarded so earlier text-only Bricks versions do not require its newer file API. The production private package remains 0.2.0; this candidate was submitted to WordPress.org on November 8, 2026 under `minthaik`, but has not been migrated into production. The directory automated scan passed and the status is **Awaiting Review**, with initial slug `native-formsubmit-for-bricks`. Submission is not approval.
 
 Public CI is the reproducible record for PHP standards, WordPress 6.5/latest contract tests, package integrity and Plugin Check. Its small independent Bricks doubles do not replace real-theme tests. CI contacts no FormSubmit endpoint and needs no real recipient or licensed theme.
 
@@ -30,4 +30,4 @@ The real minimum Bricks version and a full multisite network-uninstall matrix ha
 
 ## Release and rollback
 
-Review `docs/WORDPRESS-ORG.md`, inspect the exact allowlisted ZIP and wait for green CI. Submission and account declarations remain for the owner. Never activate the earlier private and renamed candidate plugins together. Back up recipient settings and follow migration notes. Replace the delivery action before deactivation; uninstall clears only plugin settings and leaves Bricks documents intact. Runtime services have no schema migration, background work or submission store to roll back.
+Review `docs/WORDPRESS-ORG.md`, inspect the exact allowlisted ZIP and wait for green CI. The authorized submission and declarations are complete. Await the review email; use the existing review ticket for corrections. Never activate the earlier private and renamed candidate plugins together. Back up recipient settings and follow migration notes. Replace the delivery action before deactivation; uninstall clears only plugin settings and leaves Bricks documents intact. Runtime services have no schema migration, background work or submission store to roll back.

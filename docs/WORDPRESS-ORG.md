@@ -1,4 +1,10 @@
-# WordPress.org submission preparation
+# WordPress.org submission and review
+
+## Submission record — November 8, 2026
+
+Submitted successfully using **minthaik**. WordPress.org displayed **Results of Automated Plugin Scanning: Pass** and **Awaiting Review**. Initial assigned slug: `native-formsubmit-for-bricks`. Submitted file: `native-formsubmit-for-bricks-0.2.1.zip`, version **0.2.1**, SHA-256 `c8aff14ce0a8590106843ec5785afff77192935d42960b42ed1ed2848b9a0845`. This is the unchanged canonical CI-built artifact. WordPress.org reported that it sent a confirmation email. No manual approval or SVN access has been granted yet.
+
+Do not create a duplicate submission. Await the review email and respond in the same ticket; use the existing submission's updated-plugin upload if revisions are requested.
 
 ## Candidate
 
@@ -18,13 +24,11 @@ The former private package began with FormSubmit. The candidate has a neutral pr
 
 If review access is requested, supply it privately to the review team. Never publish production credentials or licensed themes.
 
-## Submission steps
+## Review and publication steps
 
-1. Confirm GitHub Actions is green, inspect `docs/STATUS.md`, rebuild and check the exact ZIP with `python scripts/package.py` and `python scripts/check-release.py`.
-2. Sign in as `minthaik` at [Add your plugin](https://wordpress.org/plugins/developers/add/). Upload only the installable ZIP. Check the proposed name/slug and account/contact information.
-3. Read the current declarations/terms. The account owner completes any agreement and final submission. Preparation does not submit the plugin.
-4. Keep the same review ticket for corrections. Plugin Check passing does not guarantee approval.
-5. After approval, use the assigned WordPress.org SVN repository: runtime files in `trunk/`, version in `tags/0.2.1/`, artwork separately in top-level `assets/`. Match the stable tag. Do not upload the GitHub checkout or theme.
+1. Await the review email and keep the same ticket for all corrections. Passing automated checks does not guarantee approval.
+2. For requested changes, run appropriate checks, inspect the exact ZIP, and use the existing submission's updated-plugin upload. Do not submit a second copy.
+3. After approval, use the assigned WordPress.org SVN repository: runtime files in `trunk/`, version in `tags/0.2.1/`, artwork separately in top-level `assets/`. Match the stable tag and actual approved version. Do not upload the GitHub checkout or licensed theme.
 
 No automated SVN/directory deployment or stored SVN credentials are configured before approval.
 
