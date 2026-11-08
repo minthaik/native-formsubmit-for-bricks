@@ -1,0 +1,16 @@
+/vendor/
+/node_modules/
+/.tools/
+/build/
+/qa/
+/.private/
+/AGENTS.md
+/docs/EXECUTION-STATE.md
+/scripts/live-attachment-qa.mjs
+/.phpcs-cache
+/.wp-env.json
+*.log
+__pycache__/
+*.pyc
+.env
+.env.*

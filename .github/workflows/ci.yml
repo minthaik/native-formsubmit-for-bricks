@@ -1,0 +1,126 @@
+name: Plugin quality
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  standards:
+    name: PHP ${{ matrix.php }} standards
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.3', '8.5']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@d52fc211a0436f8839a587b3b5b8efddab4744ea # v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer lint
+      - run: composer audit
+      - name: Syntax and dependency isolation
+        run: |
+          find includes -name '*.php' -exec php -l {} \;
+          php -l native-formsubmit-for-bricks.php
+          php -l uninstall.php
+          php tests/dependency-smoke.php none
+          php tests/dependency-smoke.php 1.11.0
+          php tests/dependency-smoke.php 1.12.2
+          php tests/dependency-smoke.php 2.4.3
+
+  contracts:
+    name: WordPress ${{ matrix.wp }} contracts
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - wp: '6.5'
+            php: '7.4'
+          - wp: latest
+            php: '8.3'
+    services:
+      database:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: local-ci-only
+          MARIADB_DATABASE: wordpress
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+    env:
+      FSBR_CONTRACT_TEST: '1'
+      FSBR_TEST_CAPTURE: '1'
+      WP_CLI_PHP_ARGS: '-d error_reporting=24575'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@d52fc211a0436f8839a587b3b5b8efddab4744ea # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli
+          tools: wp-cli
+          coverage: none
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.x'
+      - name: Isolated WordPress, no licensed theme or provider traffic
+        run: |
+          mkdir -p .tools/wordpress qa
+          wp core download --version=${{ matrix.wp }} --path=.tools/wordpress
+          wp config create --path=.tools/wordpress --dbname=wordpress --dbuser=root --dbpass=local-ci-only --dbhost=127.0.0.1:3306
+          wp config set WP_ENVIRONMENT_TYPE local --path=.tools/wordpress
+          wp config set WP_HTTP_BLOCK_EXTERNAL true --raw --path=.tools/wordpress
+          wp config set WP_ACCESSIBLE_HOSTS '127.0.0.1,localhost' --path=.tools/wordpress
+          wp core install --path=.tools/wordpress --url=http://127.0.0.1:8796 --title='Synthetic plugin QA' --admin_user=fsbqa --admin_password="$(openssl rand -hex 20)" --admin_email=qa@example.test --skip-email
+          python scripts/package.py --sync-qa
+          wp plugin activate native-formsubmit-for-bricks --path=.tools/wordpress
+          php -S 127.0.0.1:8797 -t tests >qa/capture.log 2>&1 &
+          echo $! > .tools/capture.pid
+          for attempt in $(seq 1 20); do curl -fsS http://127.0.0.1:8797/http-capture.php >/dev/null && break || sleep 1; done
+      - name: WordPress-backed contracts and real multipart parsing
+        run: |
+          wp eval-file tests/integration.php --path=.tools/wordpress --require=tests/contract-bootstrap.php
+          wp eval-file tests/attachments.php --path=.tools/wordpress --require=tests/contract-bootstrap.php
+      - name: Stop loopback fixture
+        if: always()
+        run: test ! -f .tools/capture.pid || kill "$(cat .tools/capture.pid)"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: contracts-wp-${{ matrix.wp }}
+          path: qa/*.json
+          if-no-files-found: ignore
+
+  package:
+    name: Package and Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.x'
+      - run: python scripts/package.py
+      - run: python scripts/check-release.py
+      - name: Unpack the actual distribution for review
+        run: python -m zipfile -e build/native-formsubmit-for-bricks-*.zip build/review
+      - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+        with:
+          build-dir: build/review/native-formsubmit-for-bricks
+          slug: native-formsubmit-for-bricks
+          strict: 'true'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wordpress-installable-plugin
+          path: |
+            build/*.zip
+            build/manifest.json
