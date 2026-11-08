@@ -94,7 +94,7 @@ jobs:
       - name: Stop loopback fixture
         if: always()
         run: test ! -f .tools/capture.pid || kill "$(cat .tools/capture.pid)"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: contracts-wp-${{ matrix.wp }}
@@ -118,7 +118,7 @@ jobs:
           build-dir: build/review/native-formsubmit-for-bricks
           slug: native-formsubmit-for-bricks
           strict: 'true'
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wordpress-installable-plugin
           path: |
